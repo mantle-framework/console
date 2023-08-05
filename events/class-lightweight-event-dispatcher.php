@@ -8,7 +8,6 @@
 namespace Mantle\Console\Events;
 
 use Mantle\Events\Dispatcher;
-use Mantle\Support\Arr;
 use RuntimeException;
 
 /**
@@ -69,28 +68,19 @@ class Lightweight_Event_Dispatcher extends Dispatcher {
 	 * @return mixed
 	 */
 	public function dispatch( $event, $payload = [] ) {
-		$filterable_value = is_array( $payload ) ? Arr::first( $payload ) : $payload;
-
 		[ $event, $payload ] = $this->parse_event_and_payload( $event, $payload );
 
 		if ( empty( $this->listeners[ $event ] ) ) {
-			return $filterable_value;
+			return;
 		}
 
 		ksort( $this->listeners[ $event ] );
 
 		foreach ( $this->listeners[ $event ] as $listeners ) {
 			foreach ( $listeners as $listener ) {
-				$filterable_value = $listener( ...$payload );
-
-				// Replace the first payload value with the return value of the listener.
-				if ( is_array( $payload ) ) {
-					$payload[0] = $filterable_value;
-				}
+				$listener( $payload );
 			}
 		}
-
-		return $filterable_value;
 	}
 
 	/**
