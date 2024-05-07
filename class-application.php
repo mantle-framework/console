@@ -39,15 +39,18 @@ class Application extends Console_Application implements Console_Application_Con
 	 * Register a console "starting" bootstrapper.
 	 *
 	 * @param Closure $callback Callback to run.
+	 * @return void
 	 */
-	public static function starting( Closure $callback ): void {
+	public static function starting( Closure $callback ) {
 		static::$bootstrappers[] = $callback;
 	}
 
 	/**
 	 * Forget all of the bootstrappers for the application.
+	 *
+	 * @return void
 	 */
-	public static function forget_bootstrappers(): void {
+	public static function forget_bootstrappers() {
 		static::$bootstrappers = [];
 	}
 
@@ -99,6 +102,7 @@ class Application extends Console_Application implements Console_Application_Con
 	 * @param string               $command Command name.
 	 * @param array                $parameters Command parameters.
 	 * @param OutputInterface|null $output_buffer Output buffer.
+	 * @return int
 	 *
 	 * @throws InvalidArgumentException Thrown if the command is not a Mantle command.
 	 */
@@ -118,6 +122,7 @@ class Application extends Console_Application implements Console_Application_Con
 	 *
 	 * @param string $command Command name.
 	 * @param array  $parameters Command parameters.
+	 * @return CommandTester
 	 */
 	public function test( string $command, array $parameters = [] ): CommandTester {
 		$command = $this->find( $command );
@@ -133,6 +138,7 @@ class Application extends Console_Application implements Console_Application_Con
 	 * Resolve a command through the console application.
 	 *
 	 * @param Symfony_Command|Command|string $command
+	 * @return static
 	 */
 	public function resolve( Symfony_Command|Command|string $command ): static {
 		if ( is_string( $command ) ) {
@@ -152,6 +158,7 @@ class Application extends Console_Application implements Console_Application_Con
 	 * Resolve an array of commands through the console application.
 	 *
 	 * @param array|string|Symfony_Command|Command $commands
+	 * @return static
 	 */
 	public function resolve_commands( $commands ): static {
 		$commands = Arr::wrap( $commands );
@@ -168,8 +175,9 @@ class Application extends Console_Application implements Console_Application_Con
 	 *
 	 * @param Throwable       $e
 	 * @param OutputInterface $output
+	 * @return void
 	 */
-	public function render_throwable( Throwable $e, OutputInterface $output ): void {
+	public function render_throwable( Throwable $e, OutputInterface $output ) {
 		$output->writeln(
 			sprintf(
 				'<error>Exception: %s</error>',
