@@ -21,10 +21,10 @@ class Output_Style extends SymfonyStyle {
 	 * @param array $headers Headers for the data.
 	 * @param array $data Data with no keys.
 	 */
-	public function format_json( array $headers, array $data ) {
+	public function format_json( array $headers, array $data ): void {
 		// Merge the headers with the data.
 		$data = collect( $data )
-			->map( fn( $row ) => array_combine( $headers, $row ) )
+			->map( fn ( $row ) => array_combine( $headers, $row ) )
 			->to_array();
 
 		$this->write( json_encode( $data, JSON_PRETTY_PRINT ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode
@@ -36,10 +36,10 @@ class Output_Style extends SymfonyStyle {
 	 * @param array $headers Headers for the data.
 	 * @param array $data Data with no keys.
 	 */
-	public function format_csv( array $headers, array $data ) {
+	public function format_csv( array $headers, array $data ): void {
 		// Merge the headers with the data.
 		$data = collect( $data )
-			->map( fn( $row ) => array_combine( $headers, $row ) )
+			->map( fn ( $row ) => array_combine( $headers, $row ) )
 			->to_array();
 
 		// todo: update to write to output.
@@ -60,15 +60,15 @@ class Output_Style extends SymfonyStyle {
 	 * @param array $headers Headers for the data.
 	 * @param array $data Data with no keys.
 	 */
-	public function format_xml( array $headers, array $data ) {
+	public function format_xml( array $headers, array $data ): void {
 		// Merge the headers with the data.
 		$data = collect( $data )
-			->map( fn( $row ) => array_combine( $headers, $row ) )
+			->map( fn ( $row ) => array_combine( $headers, $row ) )
 			->to_array();
 
 		$xml = new \SimpleXMLElement( '<root/>' );
 
-		foreach ( $data as $headers => $row ) {
+		foreach ( $data as $row ) {
 			$item = $xml->addChild( 'item' );
 
 			foreach ( $row as $key => $value ) {
