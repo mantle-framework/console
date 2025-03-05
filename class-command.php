@@ -19,8 +19,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * CLI Command for Service Providers
  */
 abstract class Command extends Symfony_Command {
-	use Concerns\Interacts_With_IO,
-		Macroable;
+	use Concerns\Interacts_With_IO;
+	use Macroable;
 
 	/**
 	 * Prefix for the command.
@@ -59,15 +59,11 @@ abstract class Command extends Symfony_Command {
 
 	/**
 	 * The command's help text.
-	 *
-	 * @var string
 	 */
 	protected string $help;
 
 	/**
 	 * Container instance.
-	 *
-	 * @var \Mantle\Contracts\Application
 	 */
 	protected \Mantle\Contracts\Application $container;
 
@@ -94,7 +90,7 @@ abstract class Command extends Symfony_Command {
 	 */
 	protected function set_definition_from_signature() {
 		// Prefix the signature with the name if defined separately.
-		if ( ! empty( $this->name ) && 0 !== strpos( $this->signature, $this->name ) ) {
+		if ( ! empty( $this->name ) && ! str_starts_with( $this->signature, $this->name ) ) {
 			$this->signature = $this->name . ' ' . $this->signature;
 		}
 
@@ -111,8 +107,6 @@ abstract class Command extends Symfony_Command {
 
 	/**
 	 * Getter for the command name.
-	 *
-	 * @return string
 	 */
 	public function get_name(): string {
 		return $this->name;
@@ -145,9 +139,8 @@ abstract class Command extends Symfony_Command {
 	 *
 	 * @param InputInterface  $input
 	 * @param OutputInterface $output
-	 * @return int
 	 */
-	protected function execute( InputInterface $input, OutputInterface $output ) {
+	protected function execute( InputInterface $input, OutputInterface $output ): int {
 		$this->set_input( $input );
 		$this->set_output( $output );
 
@@ -166,8 +159,8 @@ abstract class Command extends Symfony_Command {
 	 *
 	 * @throws InvalidArgumentException Thrown on invalid command.
 	 */
-	public function call( string $command, array $options = [], OutputInterface $output = null ) {
-		if ( 0 === strpos( $command, static::PREFIX . ' ' ) ) {
+	public function call( string $command, array $options = [], ?OutputInterface $output = null ) {
+		if ( str_starts_with( $command, static::PREFIX . ' ' ) ) {
 			$command = substr( $command, strlen( static::PREFIX ) + 1 );
 
 			// Attempt to resolve the command from the container and run it.
@@ -188,14 +181,12 @@ abstract class Command extends Symfony_Command {
 	 *
 	 * @param \Mantle\Contracts\Application $container Application container.
 	 */
-	public function set_container( \Mantle\Contracts\Application $container ) {
+	public function set_container( \Mantle\Contracts\Application $container ): void {
 		$this->container = $container;
 	}
 
 	/**
-	 * Retrieve the application container.
-	 *
-	 * @return \Mantle\Contracts\Application     */
+	 * Retrieve the application container.     */
 	public function get_container(): \Mantle\Contracts\Application {
 		return $this->container;
 	}
