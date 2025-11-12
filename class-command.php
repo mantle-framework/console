@@ -5,8 +5,6 @@
  * @package Mantle
  */
 
-declare(strict_types=1);
-
 namespace Mantle\Console;
 
 use Mantle\Contracts\Application as Application_Contract;
@@ -21,8 +19,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
-
-use function Mantle\Support\Helpers\mixed;
 
 /**
  * CLI Command for Service Providers
@@ -143,8 +139,6 @@ abstract class Command extends Symfony_Command {
 	/**
 	 * Execute the console command.
 	 *
-	 * @throws InvalidArgumentException Thrown on invalid command.
-	 *
 	 * @param InputInterface  $input
 	 * @param OutputInterface $output
 	 */
@@ -154,17 +148,7 @@ abstract class Command extends Symfony_Command {
 
 		$method = method_exists( $this, 'handle' ) ? 'handle' : '__invoke';
 
-		if ( ! method_exists( $this, $method ) ) {
-			throw new InvalidArgumentException( 'The command is missing a handle or __invoke method.' );
-		}
-
-		$callable = [ $this, $method ];
-
-		if ( ! is_callable( $callable ) ) {
-			throw new InvalidArgumentException( "The command's {$method} method is not callable." );
-		}
-
-		return mixed( $this->container->call( $callable ) )->int();
+		return (int) $this->container->call( [ $this, $method ] );
 	}
 
 	/**
@@ -183,14 +167,8 @@ abstract class Command extends Symfony_Command {
 		if ( str_starts_with( $command, $prefix . ' ' ) ) {
 			$command = substr( $command, strlen( $prefix ) + 1 );
 
-			$application = $this->getApplication();
-
-			if ( ! $application instanceof \Symfony\Component\Console\Application ) {
-				throw new InvalidArgumentException( 'Unable to proxy to WP-CLI when application instance is missing.' );
-			}
-
 			// Attempt to resolve the command from the container and run it.
-			$command = $application->find( $command );
+			$command = $this->getApplication()->find( $command );
 
 			return $command->run( new ArrayInput( $options ), $output ?: new ConsoleOutput() );
 		}

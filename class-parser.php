@@ -7,8 +7,6 @@
  * @package Mantle
  */
 
-declare(strict_types=1);
-
 namespace Mantle\Console;
 
 use InvalidArgumentException;
@@ -148,9 +146,9 @@ class Parser {
 	 * @param  string $token
 	 * @return array<string>
 	 */
-	protected static function extract_description( $token ): array {
+	protected static function extract_description( $token ) {
 		$parts = preg_split( '/\s+:\s+/', trim( $token ), 2 );
 
-		return $parts && count( $parts ) === 2 ? $parts : [ $token, '' ];
+		return count( $parts ) === 2 ? $parts : [ $token, '' ];
 	}
 }
