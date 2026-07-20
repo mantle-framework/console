@@ -102,7 +102,7 @@ trait Interacts_With_IO {
 			return $this->input->getOptions();
 		}
 
-		return $this->input->getOption( $key ) ?: $default;
+		return $this->input->getOption( $key ) ?? $default;
 	}
 
 	/**
@@ -393,7 +393,7 @@ trait Interacts_With_IO {
 	 * @param  int|string|null $verbosity
 	 */
 	public function alert( string $string, $verbosity = null ): void {
-		$length = Str::length( strip_tags( $string ) ) + 12; // phpcs:ignore WordPressVIPMinimum.Functions.StripTags.StripTagsOneParameter
+		$length = Str::length( strip_tags( $string ) ) + 12;
 
 		$this->comment( str_repeat( '*', $length ), $verbosity );
 		$this->comment( '*     ' . $string . '     *', $verbosity );
@@ -455,8 +455,8 @@ trait Interacts_With_IO {
 	 *
 	 * @param  string|int|null $level
 	 */
-	protected function parse_verbosity( $level = null ): int {
-		if ( isset( $this->verbosity_map[ $level ] ) ) {
+	protected function parse_verbosity( string|int|null $level = null ): int {
+		if ( $level && isset( $this->verbosity_map[ $level ] ) ) {
 			$level = $this->verbosity_map[ $level ];
 		} elseif ( ! is_int( $level ) ) {
 			$level = OutputInterface::VERBOSITY_NORMAL;
